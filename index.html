@@ -1,0 +1,243 @@
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>1D Cellular Automata</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="seedrandom.js"></script>
+    <script src="slider-canvas.js"></script>
+    <script src="main.js"></script>
+  </head>
+  <body onload="init()">
+    <noscript><b>Sorry, this page requires JavaScript.</b></noscript>
+
+    <h2>Edge Of Chaos</h2>
+    <p id="message"></p>
+
+    <table border="0" cellpadding="0" cellspacing="0">
+      <tbody>
+        <tr valign="top">
+          <td>
+            <div id="controls">
+              <div class="group">
+                <p>
+                  <button id="run" disabled="">Run</button>
+                  <button id="pause">Pause</button>
+                  <button id="step" disabled="">Step</button><br />
+                  <button id="runToScreen">Run to Next Screen</button><br />
+                  <button id="restart">Restart Current World</button><br />
+                  Run Speed:
+                  <select id="speed">
+                    <option value="1">Fastest</option>
+                    <option value="3">Faster</option>
+                    <option value="6">Fast</option>
+                    <option value="15">Moderate</option>
+                    <option value="30">Slow</option>
+                    <option value="60">Very Slow</option>
+                  </select>
+                </p>
+              </div>
+
+              <div class="group">
+                <p>
+                  <button id="newworld">Create New World Using:</button><br />
+                  <label class="indent"
+                    >Fill:
+                    <select id="worldtype">
+                      <option value="1">All Cells, all live</option>
+                      <option value="2">All Cells, symmetric</option>
+                      <option value="3">All Cells, 50% dead</option>
+                      <option value="4">All Cells, 75% dead</option>
+                      <option value="5">Clump</option>
+                      <option value="6">Symmetric Clump</option>
+                      <option value="7">Clumps</option>
+                      <option value="8">One Dot</option>
+                      <option value="9">Dots</option>
+                    </select></label
+                  ><br />
+                  <label class="indent"
+                    >Cell Size:
+                    <select id="cellsize">
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
+                      <option value="5">5</option>
+                      <option value="7">7</option>
+                      <option value="10">10</option>
+                      <option value="20">20</option>
+                    </select></label
+                  >
+                </p>
+              </div>
+
+              <div class="group">
+                <p><button id="colors">Edit Colors</button></p>
+              </div>
+
+              <div class="group">
+                <p>
+                  <button id="new">Create New Rule Set Using:</button><br />
+                  <label class="indent"
+                    >Number of States:<select id="states">
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
+                      <option value="5">5</option>
+                      <option value="6">6</option>
+                      <option value="7">7</option>
+                      <option value="8">8</option>
+                      <option value="9">9</option>
+                      <option value="10">10</option>
+                      <option value="11">11</option>
+                      <option value="12">12</option>
+                      <option value="13">13</option>
+                      <option value="14">14</option>
+                      <option value="15">15</option>
+                      <option value="16">16</option>
+                      <option value="17">17</option>
+                      <option value="18">18</option>
+                      <option value="19">19</option>
+                      <option value="20">20</option>
+                      <option value="21">21</option>
+                      <option value="22">22</option>
+                      <option value="23">23</option>
+                      <option value="24">24</option>
+                      <option value="25">25</option>
+                      <option value="26">26</option>
+                      <option value="27">27</option>
+                      <option value="28">28</option>
+                      <option value="29">29</option>
+                      <option value="30">30</option>
+                      <option value="31">31</option>
+                      <option value="32">32</option>
+                    </select></label
+                  ><br />
+                  <label class="indent"
+                    >Neighborhood Size:<select id="neighbors">
+                      <option value="3">3</option>
+                      <option value="5">5</option>
+                      <option value="7">7</option>
+                      <option value="9">9</option>
+                    </select></label
+                  ><br />
+                  <label class="indent"
+                    ><input id="isotropic" type="checkbox" />ISOtropic</label
+                  >
+                </p>
+              </div>
+
+              <div class="group" id="localstorage">
+                <p>
+                  <button id="save">Save Example in Browser</button><br />
+                  <label class="indent"
+                    >Name:
+                    <input type="text" id="savename" maxlength="15" size="15"
+                  /></label>
+                </p>
+
+                <p>
+                  <button id="load">Load Example:</button><br />
+                  <select id="loadname" class="indent" disabled="">
+                    <option>(None Available)</option>
+                  </select>
+                </p>
+
+                <p>
+                  <button id="delete">Delete Example:</button><br />
+                  <select id="deletename" class="indent" disabled="">
+                    <option>(None Available)</option>
+                  </select>
+                </p>
+
+                <p>
+                  <button id="undodelete" disabled="">Undo Delete</button>
+                  <button id="deleteall">Delete All!</button>
+                </p>
+              </div>
+            </div>
+          </td>
+          <td>
+            <div id="board" style="width: 790.82px; height: 825.086px">
+              <div id="slider-holder">
+                <p id="info">4 states, 5 neighbors, isotropic, 544 rules</p>
+                <p>
+                  Rules In Use:
+                  <input
+                    type="text"
+                    id="rulesused"
+                    maxlength="6"
+                    size="6"
+                  /><canvas
+                    id="slider-canvas"
+                    height="40"
+                    width="650"
+                    align="center"
+                    style="width: 650.438px"
+                  ></canvas>
+                </p>
+              </div>
+              <div id="canvas-holder">
+                <canvas
+                  id="canvas"
+                  width="790"
+                  height="756"
+                  style="width: 790.82px; height: 756.266px"
+                ></canvas>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- UI for color editor dialog -->
+    <div id="ccUI" style="display: none">
+      <table border="0">
+        <tbody>
+          <tr align="center">
+            <td>
+              <button onclick="installStandardPalette(1)">
+                Black / Default
+              </button>
+            </td>
+            <td>
+              <button onclick="installStandardPalette(3)">
+                Black / Spectrum
+              </button>
+            </td>
+            <td>
+              <button onclick="installStandardPalette(5)">Grayscale</button>
+            </td>
+          </tr>
+          <tr align="center">
+            <td>
+              <button onclick="installStandardPalette(2)">
+                White / Default
+              </button>
+            </td>
+            <td>
+              <button onclick="installStandardPalette(4)">
+                White / Spectrum
+              </button>
+            </td>
+            <td>
+              <button onclick="installStandardPalette(6)">
+                Reverse Grayscale
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <p id="ccpalette"></p>
+      <p>Editing Color for State Number <span id="ccnum"></span></p>
+      <p><canvas id="ccsliders" width="400" height="170"></canvas></p>
+      <p>
+        <button onclick="acceptNewPalette()">OK (Return)</button>
+        <button onclick="cancelNewPalette()">Cancel (ESC)</button>
+      </p>
+      <p>Click a color to edit it.<br />Click "OK" or "Cancel" to finish.</p>
+    </div>
+    <div id="ccholder" style="display: none"></div>
+  </body>
+</html>
